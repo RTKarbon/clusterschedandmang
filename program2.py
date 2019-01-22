@@ -1,10 +1,11 @@
 #!/usr/bin/env python
 
 import time
-import dbglib as dbg
+from lib import *
 
-def program1():
+def program2():
     dbg.print_info("This is hello from program 2")
+    dbg.print_info("Program 2 is working...")
     time.sleep(1)
     dbg.print_info("This is goodbye from program 2")
 
