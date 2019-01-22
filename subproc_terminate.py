@@ -11,10 +11,10 @@ def main():
     for pname in program_l:
         cmd = "python ./programs/%s.py" % pname
         proc = subprocess.Popen(shlex.split(cmd), stdout=flog, stderr=flog)
-        while proc.returncode == None:
-            time.sleep(0.1)
-            dbg.print_info("Polling subprocess...")
-            proc.poll()
+        time.sleep(0.1)
+        dbg.print_info("Terminating a process...")
+        proc.terminate()
+        proc.wait()
         dbg.print_info("Process returncode: %d" % proc.returncode)
     flog.close()
 
