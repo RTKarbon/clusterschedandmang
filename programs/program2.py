@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 import time
-from lib import *
+from common import *
 
 def program2():
     dbg.print_info("This is hello from program 2")
