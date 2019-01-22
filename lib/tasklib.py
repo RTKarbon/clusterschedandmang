@@ -1,5 +1,5 @@
 
-import subprocess, sys, shlex, re
+import subprocess, sys, shlex, re, os
 import dbglib as dbg
 
 SCRIPT_DIR = os.path.dirname(os.path.realpath(__file__))
@@ -21,33 +21,6 @@ class Task:
         proc = subprocess.Popen(shlex.split(self.cmd), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         self.proc = proc
         return proc
-
-    def LaunchSlurm(self):
-        fslurm_name = self.tag + ".slurm"
-        fslurm_path = os.path.join(BUILD_DIR, fslurm_name)
-        fslurm = open(fslurm_name, 'w')
-        fslurm.write("#!/bin/sh\n")
-        fslurm.write("#SBATCH -N 1\n")
-        fslurm.write("#SBATCH --ntasks-per-node=1\n")
-        fslurm.write("#SBATCH --mem=1G\n")
-        fslurm.write("#SBATCH -t 30")
-        fslurm.write("%s >> %s.log 2>&1" % (self.cmd, self.log_path))
-        fslurm.close()
-        os.chmod(fslurm_path, st.st_mode | stat.S_IEXEC)
-
-        cmd = "sbatch %s" % fslurm_path
-        proc = subprocess.Popen(shlex.split(cmd), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        out, err = proc.communicate()
-        if proc.returncode != 0:
-            dbg.print_error("Slurm command Failed!")
-
-        match = re.search(r"Submitted batch job (\d+)", out)
-        if match != None:
-            self.job_id = int(match.group(1))
-            dbg.print_info("Launched Slurm job %d" % self.job_id)
-        else:
-            dbg.print_error("Can't find Job ID in %s" % fslurm_path)
-
 
     def WaitTillFinished(self):
         (out, err) = self.proc.communicate()
