@@ -10,4 +10,4 @@ def program2():
     dbg.print_info("This is goodbye from program 2")
 
 if __name__ == "__main__":
-    program1()
+    program2()
